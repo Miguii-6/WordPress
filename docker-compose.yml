@@ -1,31 +1,32 @@
 services:
   db:
-    # We use a mariadb image which supports both amd64 & arm64 architecture
+    # Utilizando la imagen de MariaDB que admite múltiples arquitecturas
     image: mariadb:10.6.4-focal
-    # If you really want to use MySQL, uncomment the following line
-    #image: mysql:8.0.27
+    # Comando para establecer la autenticación nativa de MySQL
     command: '--default-authentication-plugin=mysql_native_password'
     volumes:
-      - ./db_data:/var/lib/mysql
+      - ./db_data:/var/lib/mysql # Volumen para almacenar datos de la base de datos
     environment:
-      - MYSQL_ROOT_PASSWORD=somewordpress
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wordpress
-      - MYSQL_PASSWORD=wordpress
+      - MYSQL_ROOT_PASSWORD=somewordpress # Contraseña del usuario root
+      - MYSQL_DATABASE=wordpress # Nombre de la base de datos
+
+      - MYSQL_USER=wordpress # Usuario de la base de datos
+      - MYSQL_PASSWORD=wordpress # Contraseña del usuario de la base de datos
     expose:
-      - 3306
-      - 33060
-  wordpress:
+      - 3306 # Puerto para acceder a la base de datos
+      - 33060 # Puerto alternativo para la base de datos
+  wordpress: # Servicio para WordPress
+    # Utilizando la imagen más reciente de WordPress
     image: wordpress:latest
     volumes:
-      - ./wp_data:/var/www/html
+      - ./wp_data:/var/www/html # Volumen para almacenar datos de WordPress
     ports:
-      - 80:80
-    environment:
+      - 80:80 # Mapeo del puerto local al puerto de WordPress
+    environment: #host, user, contraseña y nombre de la base de datos para el WordPress
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_USER=wordpress
       - WORDPRESS_DB_PASSWORD=wordpress
       - WORDPRESS_DB_NAME=wordpress
-volumes:
+volumes: #Volumenes para la base de Datos y el Wordpress
   db_data:
   wp_data:
